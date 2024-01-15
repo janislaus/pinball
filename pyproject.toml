@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "pinball"
+version = "0.1.0"
+description = ""
+authors = ["Pauli"]
+readme = "README.md"
+packages = [{ include = "pinball" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11, <3.13"
+numpy = "1.26.0"
+matplotlib = "3.7.2"
+pytest = "7.4.0"
+scipy = "1.11.3"
+pandas = "2.0.3"
+h5py = "3.9.0"
+pygame = "2.5.2"
+pymunk = "6.5.1"
+black = "^23.11.0"
+debugpy = "^1.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
