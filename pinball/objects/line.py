@@ -7,10 +7,10 @@ from matplotlib.axes import Axes
 
 class Line:
     def __init__(self, p1: Point, p2: Point) -> None:
-        self.p1 = p1
-        self.p2 = p2
-        self.length = calculate_distance(self.p1, self.p2)
-        self.direction = p2 - p1
+        self.p1: Point = p1
+        self.p2: Point = p2
+        self.length: float = calculate_distance(self.p1, self.p2)
+        self.direction: Point = p2 - p1
         if self.direction.x == 0:
             self.angle = math.pi / 2
         else:

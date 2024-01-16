@@ -14,7 +14,8 @@ class Spring:
         self.v = 0
         self.screen = screen
 
-    def get_boundaries(self) -> list[Line]:
+    @property
+    def boundaries(self) -> list[Line]:
         r = self.rect
         return [
             Line(Point(r.left, r.top), Point(r.right, r.top)),

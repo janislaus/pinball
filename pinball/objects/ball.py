@@ -1,10 +1,8 @@
 from __future__ import annotations
-from copy import deepcopy
 import math
 
 from pinball.objects.line import Line, rotate_line
 
-from math import sin, cos
 import pygame
 
 from pinball.objects.point import Point
@@ -31,78 +29,68 @@ class Ball:
     def draw(self, screen):
         pygame.draw.circle(screen, self.colour, [self.pos.x, self.pos.y], self.radius)
 
-    def move(self, GRAVITY_Y, DT, screen):
-        self.v.y = self.v.y + GRAVITY_Y * DT
-        # if self.pos.y +self.radius >= screen.get_height() or self.pos.y -self.radius <= 0:
-        #     self.v.y *=-1
-        if (
-            self.pos.x + self.radius >= screen.get_width()
-            or self.pos.x - self.radius <= 0
-        ):
-            self.v.x *= -1
-
-        if self.pos.y >= screen.get_height() and (
-            self.pos.x < ((screen.get_width() / 2) - 50)
-            or self.pos.x > ((screen.get_width() / 2) + 50)
-        ):
-            self.v.y = self.v.y * (-1)
-
-        self.pos.y = self.pos.y + self.v.y * DT + GRAVITY_Y * DT**2
-        self.pos.x += self.v.x * DT
-
-    def calculate_collision(self, object):
-        """
-        1) check if collision occurs : if distance from object is smaller than ball radius
-        2) calculate the new velocity:
-            - determine the angle between the object boundary and the velocity of the ball
-            - determine the new velocity-vector:
-                - determine the angle between x-axis and the object boundary
-                - calculate the ausfallswinkel
-                - determine x and y components of the velocity vector
-
-        """
-        object_boundaries: list[Line] = object.get_boundaries()
-        # draw_lines(object_boundaries, legends=["1", "2", "3", "4"])
-
-        info = []
-        for line in object_boundaries:
+    def calculate_collision(self, boundaries: list[Line], gravity: float, dt: float):
+        collisions = []
+        for boundary in boundaries:
             collision_point = calculate_intersection(
-                Line(self.pos, self.pos + self.v), line
+                Line(self.pos, self.pos + self.v), boundary
             )
             if collision_point is None:
-                break
+                continue
 
             distance = calculate_distance(self.pos, collision_point)
 
-            valid_collision = line.contains(collision_point, self.radius) and (
-                distance <= self.radius
+            intersection = calculate_point_line_distance(boundary, self.pos)
+            closest_distance = Line(self.pos, intersection).length
+
+            valid_collision = (closest_distance <= self.radius) and (
+                boundary.contains(intersection, radius=30)
             )
             if valid_collision:
-                info.append((line, collision_point, distance))
+                collisions.append(
+                    (boundary, collision_point, distance, closest_distance)
+                )
 
-        if info:
-            line, collision_point, distance = max(info, key=lambda x: x[2])
+        if collisions:
+            # TODO: check this
+            boundary, collision_point, distance, closest_distance = min(
+                collisions, key=lambda x: x[3]
+            )
 
-            old = deepcopy(self.v_line)
-            self.v = self.update_v(line)
-            new = deepcopy(self.v_line)
-            # draw_lines([old], legends=["old_v"])
-            print(old == new)
-            print(old)
-            print(new)
-            print("--------------")
-            # draw_lines([old, new, line], legends=["old_v", "new_v", "boundary"])
+            # TODO: this is not correct, if the velocity is other than perpendicular to the boundary line
+            # self.pos = self.adjust_position(distance=distance)
+            self.v = self.update_v(boundary)
+
+        self.v.y += gravity * dt
+        self.pos.y += self.v.y * dt + gravity * dt**2
+        self.pos.x += self.v.x * dt
 
     def update_v(self, boundary: Line):
         angle_incoming = calculate_angle(self.v_line, boundary)
 
-        if self.v_line.angle < boundary.angle:
+        if self.v_line.angle > boundary.angle:
             new_v_line = rotate_line(self.v_line, math.pi - 2 * angle_incoming)
         else:
             new_v_line = rotate_line(self.v_line, -(math.pi - 2 * angle_incoming))
 
-        new = new_v_line.p2 - new_v_line.p1
-        return new
-        # return Point(-new.x, -new.y)
+        # new = new_v_line.p2 - new_v_line.p1
+        # new = new_v_line.p2 - new_v_line.p1
+        return new_v_line.direction
 
-        # draw_lines()
+    def adjust_position(self, distance: float):
+        direction_unit_vector = self.v_line.direction / self.v_line.length
+        return self.pos + direction_unit_vector * (-1) * (self.radius - distance)
+
+
+def calculate_point_line_distance(line: Line, p: Point) -> Point:
+    """
+    Find nearest point on line to a given point p.
+    """
+    intersection = calculate_intersection(
+        line, Line(p, Point(-line.direction.y, line.direction.x))
+    )
+    if intersection:
+        return intersection
+        # return Line(p, intersection).length
+    else:
+        raise ValueError("WOGALO")

@@ -33,10 +33,13 @@ def calculate_intersection(l1: Line, l2: Line) -> Point | None:
 
 
 def calculate_angle(l1: Line, l2: Line):
-    return acos(
+    angle = acos(
         (l1.direction.x * l2.direction.x + l1.direction.y * l2.direction.y)
         / (l1.length * l2.length)
     )
+    if angle >= math.pi / 2:
+        return math.pi - angle
+    return angle
 
 
 def random_string(length: int) -> str:
@@ -44,9 +47,13 @@ def random_string(length: int) -> str:
     return "".join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
-def draw_lines(lines: list[Line], legends: list[str]):
+def draw_lines(lines: list[Line], legends: list[str] | None = None):
+    if legends is None:
+        legends = [""] * len(lines)
+
     ax: Axes
     _, ax = plt.subplots()  # type: ignore
+
     for line, legend in zip(lines, legends):
         line.create_plot(ax, legend)
 
@@ -56,11 +63,3 @@ def draw_lines(lines: list[Line], legends: list[str]):
     plt.legend()
     path = Path(__file__).parents[2] / "data" / "collisions" / f"{random_string(5)}.png"
     plt.savefig(path)
-
-
-def rotate_line(l: Line, angle: float) -> Line:
-    rotated_point = Point(
-        math.cos(angle) * l.p1.x - math.sin(angle) * l.p1.y,
-        math.cos(angle) * l.p1.x + math.sin(angle) * l.p1.y,
-    )
-    return Line(l.p2, rotated_point)
