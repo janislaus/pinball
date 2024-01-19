@@ -17,7 +17,7 @@ SCREEN_HEIGHT = 1000
 GRAVITY_X = 0.0
 GRAVITY = 0.3
 # DT = 1  # ms (discretization of time)
-DT = 0.2  # ms (discretization of time)
+DT = 0.1  # ms (discretization of time)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 bg_orig = pygame.image.load(
@@ -33,8 +33,8 @@ ball = Ball(
     y=200,
     colour="black",
     r=30,
-    vy=5,
-    vx=35,
+    vy=200,
+    vx=-6,
 )
 
 # ball = Ball(x=550, y=750, colour="black", r=30)
@@ -83,4 +83,4 @@ while running:
 
     pygame.display.flip()  # Update the display of the full screen
     # clock.tick(60)  # 60 frames per second
-    clock.tick(300)  # 60 frames per second
+    clock.tick(600)  # 60 frames per second

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import time
 from copy import deepcopy
 import math
 
@@ -14,7 +15,7 @@ from pinball.objects.utils import (
 
 
 class Ball:
-    def __init__(self, x, y, r, colour, vx=0, vy=-0.1):
+    def __init__(self, x, y, r, colour, vx, vy):
         self.pos = Vector(x, y)
         self.radius = r
         self.colour = colour
@@ -52,16 +53,15 @@ class Ball:
             valid_collision = (distance_pos_boundary <= self.radius) and (
                 nearest_boundary.contains(nearest_point)
             )
+
+            tunneled = Line(self.pos, self.pos + self.v).contains(collision_point)
+
             ball_approaching = (self.pos - collision_point).magnitude > (
                 self.pos + self.v.normalize() * 0.1 - collision_point
             ).magnitude
 
-            tunneled = check_if_tunneled(self.old_pos, self.pos, nearest_boundary)
-            if tunneled and self.old_pos is not None:
-                print("tunneled")
-                self.pos = self.old_pos
-
             if (valid_collision and ball_approaching) or tunneled:
+                # if valid_collision and ball_approaching:
                 return self.v.rotate(calculate_rotation_angle(self.v, nearest_boundary))
 
         return self.v
@@ -118,44 +118,3 @@ def calculate_rotation_angle(v: Vector, boundary: Line):
         return -2 * incoming_angle
     else:
         return 2 * incoming_angle
-
-
-def check_if_tunneled(old_pos: Vector | None, pos: Vector, boundary: Line) -> bool:
-    if old_pos is not None:
-        l = Line(pos, old_pos)
-        p = calculate_intersection(l, boundary)
-        if p is not None:
-            print(p)
-            return l.contains(p)
-    return False
-
-    # ---------------------
-
-    # boundary_candidates = []
-    # for boundary in boundaries:
-    #     collision_point = calculate_intersection(
-    #         Line(self.pos, self.pos + self.v), boundary
-    #     )
-    #     if collision_point is None:
-    #         continue
-    #
-    #     # distance_pos_collision = (self.pos - collision_point).magnitude
-    #
-    #     nearest_point = calculate_nearest_point_on_line(boundary, self.pos)
-    #     distance_pos_boundary = (self.pos - nearest_point).magnitude
-    #
-    #     valid_collision = (distance_pos_boundary <= self.radius) and (
-    #         boundary.contains(nearest_point)
-    #     )
-    #
-    #     right_direction = (self.pos - collision_point).magnitude > (
-    #         self.pos + self.v.normalize() * 0.1 - collision_point
-    #     ).magnitude
-    #
-    #     if valid_collision and right_direction:
-    #         boundary_candidates.append(boundary)
-    #
-    # if boundary_candidates:
-    #     chosen_boundary = min(boundary_candidates)
-    #
-    #     self.v = self.v.rotate(self.calculate_rotation_angle(chosen_boundary))

@@ -11,14 +11,14 @@ class Spring:
             screen.get_width() - 60, screen.get_height() - 85, 35, length_at_rest
         )
         self.state: Literal["compressing", "releasing", "resting"] = "resting"
-        self.v = 0
+        self.v = Vector(0, 0)
         self.screen = screen
 
     @property
     def boundaries(self) -> list[Line]:
         r = self.rect
         return [
-            Line(Vector(r.left, r.top), Vector(r.right, r.top)),
+            Line(Vector(r.left, r.top), Vector(r.right, r.top), self.v),
             Line(Vector(r.left, r.bottom), Vector(r.right, r.bottom)),
             Line(Vector(r.right, r.top), Vector(r.right, r.bottom)),
             Line(Vector(r.left, r.top), Vector(r.left, r.bottom)),
@@ -39,25 +39,13 @@ class Spring:
         Updates position of rectangle
         """
 
-        counter = 0
-
         if self.rect.height <= self.length_at_rest:
-            self.v += 2
-            self.rect.height += self.v
-            self.rect.y -= self.v
+            self.v.y += 2
+            self.rect.height += int(self.v.y)
+            self.rect.y -= int(self.v.y)
         else:
-            self.v = 0
+            self.v.y = 0
             self.state = "resting"
-
-        # based on previous state calculate next
-
-        # update position of rectangle, yield
-        # stop updating when spring fully released --> self.releasing = False,
-        # assign new position to rectangle
-        # check if rectangle position exceeds max
-        # if not --> yield
-        # else: self.releasing = False
-        # pass
 
     def update(self):
         if self.state == "compressing":
