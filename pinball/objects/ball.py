@@ -15,11 +15,11 @@ from pinball.objects.utils import (
 
 
 class Ball:
-    def __init__(self, x, y, r, colour, vx, vy):
-        self.pos = Vector(x, y)
-        self.radius = r
+    def __init__(self, pos: Vector, v: Vector, radius: float, colour):
+        self.pos = pos
+        self.radius = radius
         self.colour = colour
-        self.v: Vector = Vector(vx, vy)
+        self.v: Vector = v
         self.status = "in game"  # TODO: needed?
         self.old_pos = None
         self.old_v = None
@@ -30,10 +30,10 @@ class Ball:
     def move(self, boundaries: list[Line], gravity: float, dt: float):
         self.old_pos = self.pos
         self.old_v = self.v
+        self.v.y += gravity * dt  # TODO: put it here?
 
         self.v = self.handle_collision(boundaries)
 
-        self.v.y += gravity * dt  # TODO: put it here?
         self.pos.y += self.v.y * dt + gravity * dt**2
         self.pos.x += self.v.x * dt
 
@@ -62,7 +62,11 @@ class Ball:
 
             if (valid_collision and ball_approaching) or tunneled:
                 # if valid_collision and ball_approaching:
-                return self.v.rotate(calculate_rotation_angle(self.v, nearest_boundary))
+                print(nearest_boundary.v)
+                return (
+                    self.v.rotate(calculate_rotation_angle(self.v, nearest_boundary))
+                    + nearest_boundary.v
+                )
 
         return self.v
 

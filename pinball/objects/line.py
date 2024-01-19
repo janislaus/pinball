@@ -15,7 +15,7 @@ class Line:
             self.angle = math.pi / 2
         else:
             self.angle = calculate_vector_angle(self.direction)
-        self.v = v
+        self.v: Vector = v
 
     def __repr__(self) -> str:
         return f"Point1: {self.p1}, Point2: {self.p2}"

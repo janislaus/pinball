@@ -18,7 +18,7 @@ class Spring:
     def boundaries(self) -> list[Line]:
         r = self.rect
         return [
-            Line(Vector(r.left, r.top), Vector(r.right, r.top), self.v),
+            Line(Vector(r.left, r.top), Vector(r.right, r.top), -self.v),
             Line(Vector(r.left, r.bottom), Vector(r.right, r.bottom)),
             Line(Vector(r.right, r.top), Vector(r.right, r.bottom)),
             Line(Vector(r.left, r.top), Vector(r.left, r.bottom)),

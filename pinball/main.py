@@ -2,6 +2,7 @@ import pygame
 from pathlib import Path
 from pinball.objects.ball import Ball
 from pinball.objects.court import Court
+from pinball.objects.vector import Vector
 from pinball.objects.spring import Spring
 from pinball.objects.utils import draw_lines
 
@@ -16,8 +17,8 @@ SCREEN_HEIGHT = 1000
 # Define spacetime
 GRAVITY_X = 0.0
 GRAVITY = 0.3
-# DT = 1  # ms (discretization of time)
-DT = 0.1  # ms (discretization of time)
+DT = 1  # ms (discretization of time)
+# DT = 0.1  # ms (discretization of time)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 bg_orig = pygame.image.load(
@@ -28,16 +29,16 @@ running = True
 
 # You could declare components (the initial ball, the other items, ...) here
 
-ball = Ball(
-    x=95,
-    y=200,
-    colour="black",
-    r=30,
-    vy=200,
-    vx=-6,
-)
+# ball = Ball(
+#     x=95,
+#     y=200,
+#     colour="black",
+#     r=30,
+#     vy=6,
+#     vx=-6,
+# )
 
-# ball = Ball(x=550, y=750, colour="black", r=30)
+ball = Ball(pos=Vector(x=550, y=800), v=Vector(x=0, y=0), colour="black", radius=30)
 
 objects = {"court": Court(screen=screen), "spring": Spring(screen=screen)}
 timer = 5
@@ -83,4 +84,4 @@ while running:
 
     pygame.display.flip()  # Update the display of the full screen
     # clock.tick(60)  # 60 frames per second
-    clock.tick(600)  # 60 frames per second
+    clock.tick(60)  # 60 frames per second
