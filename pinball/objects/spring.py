@@ -1,7 +1,7 @@
 import pygame
 from typing import Literal
 from pinball.objects.line import Line
-from pinball.objects.point import Point
+from pinball.objects.vector import Vector
 
 
 class Spring:
@@ -18,10 +18,10 @@ class Spring:
     def boundaries(self) -> list[Line]:
         r = self.rect
         return [
-            Line(Point(r.left, r.top), Point(r.right, r.top)),
-            Line(Point(r.left, r.bottom), Point(r.right, r.bottom)),
-            Line(Point(r.right, r.top), Point(r.right, r.bottom)),
-            Line(Point(r.left, r.top), Point(r.left, r.bottom)),
+            Line(Vector(r.left, r.top), Vector(r.right, r.top)),
+            Line(Vector(r.left, r.bottom), Vector(r.right, r.bottom)),
+            Line(Vector(r.right, r.top), Vector(r.right, r.bottom)),
+            Line(Vector(r.left, r.top), Vector(r.left, r.bottom)),
         ]
 
     def draw(self):

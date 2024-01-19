@@ -1,5 +1,5 @@
 from pinball.objects.line import Line
-from pinball.objects.point import Point
+from pinball.objects.vector import Vector
 import pygame
 
 
@@ -10,17 +10,17 @@ class Court:
 
     def get_boundaries(self, screen) -> list[Line]:
         s = screen
-        shift = 0
+        shift = 10
         return [
-            Line(Point(shift, shift), Point(shift, s.get_height() - shift)),
+            Line(Vector(shift, shift), Vector(shift, s.get_height() - shift)),
             Line(
-                Point(s.get_width() - shift, shift),
-                Point(s.get_width() - shift, s.get_height() - shift),
+                Vector(s.get_width() - shift, shift),
+                Vector(s.get_width() - shift, s.get_height() - shift),
             ),
-            Line(Point(0, 0), Point(s.get_width(), 0)),
+            Line(Vector(shift, shift), Vector(s.get_width() - shift, shift)),
             Line(
-                Point(s.get_width() - shift, s.get_height() - shift),
-                Point(0 + shift, s.get_height() - shift),
+                Vector(s.get_width() - shift, s.get_height() - shift),
+                Vector(shift, s.get_height() - shift),
             ),
         ]
 

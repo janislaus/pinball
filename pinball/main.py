@@ -16,7 +16,8 @@ SCREEN_HEIGHT = 1000
 # Define spacetime
 GRAVITY_X = 0.0
 GRAVITY = 0.3
-DT = 1  # ms (discretization of time)
+# DT = 1  # ms (discretization of time)
+DT = 0.2  # ms (discretization of time)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 bg_orig = pygame.image.load(
@@ -29,16 +30,17 @@ running = True
 
 ball = Ball(
     x=100,
-    y=300,
+    y=200,
     colour="black",
     r=30,
-    vx=15,
-    vy=0,
+    vy=5,
+    vx=35,
 )
 
 # ball = Ball(x=550, y=750, colour="black", r=30)
 
 objects = {"court": Court(screen=screen), "spring": Spring(screen=screen)}
+timer = 5
 
 # Main event loop
 while running:
@@ -60,7 +62,7 @@ while running:
             """Schliesst das Pygame Fenster wenn wir oben auf das x drücken"""
             running = False
 
-        continue
+        # continue
 
     bg = pygame.transform.scale(bg_orig, (SCREEN_WIDTH, SCREEN_HEIGHT))
     screen.blit(bg, (0, 0))  # redraws background image
@@ -69,7 +71,7 @@ while running:
     for obj in objects.values():
         boundaries += obj.boundaries
 
-    ball.calculate_collision(boundaries=boundaries, gravity=GRAVITY, dt=DT)
+    ball.move(boundaries=boundaries, gravity=GRAVITY, dt=DT)
     ball.draw(screen)
 
     objects["spring"].update()
@@ -80,4 +82,5 @@ while running:
     SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_width(), screen.get_height()
 
     pygame.display.flip()  # Update the display of the full screen
-    clock.tick(60)  # 60 frames per second
+    # clock.tick(60)  # 60 frames per second
+    clock.tick(300)  # 60 frames per second
