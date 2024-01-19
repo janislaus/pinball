@@ -29,7 +29,7 @@ running = True
 # You could declare components (the initial ball, the other items, ...) here
 
 ball = Ball(
-    x=100,
+    x=95,
     y=200,
     colour="black",
     r=30,
