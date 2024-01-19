@@ -6,7 +6,6 @@ from pinball.objects.vector import Vector
 from pinball.objects.spring import Spring
 from pinball.objects.utils import draw_lines
 
-
 # Initialize PyGame
 pygame.init()
 
@@ -38,7 +37,12 @@ running = True
 #     vx=-6,
 # )
 
-ball = Ball(pos=Vector(x=550, y=800), v=Vector(x=0, y=0), colour="black", radius=30)
+ball = Ball(
+    pos=Vector(x=550, y=800),
+    v=Vector(x=0, y=0),
+    colour="black",
+    radius=30,
+)
 
 objects = {"court": Court(screen=screen), "spring": Spring(screen=screen)}
 timer = 5
