@@ -10,10 +10,13 @@ def return_spring_v(collision_point, v):
 
 
 class Spring:
-    def __init__(self, screen, length_at_rest: int = 60) -> None:
+    def __init__(self, screen, length_at_rest: int = 80) -> None:
         self.length_at_rest = length_at_rest
         self.rect = pygame.Rect(
-            screen.get_width() - 60, screen.get_height() - 85, 35, length_at_rest
+            screen.get_width() - 67,
+            screen.get_height() - length_at_rest,
+            60,
+            length_at_rest,
         )
         self.state: Literal["compressing", "releasing", "resting"] = "resting"
         self.v = Vector(0, 0)
@@ -35,7 +38,7 @@ class Spring:
 
     def draw(self):
         pygame.draw.rect(
-            surface=self.screen, color=(250, 30, 0), rect=self.rect, width=25
+            surface=self.screen, color=(250, 30, 0), rect=self.rect, width=0
         )
 
     def compress(self):
@@ -49,7 +52,7 @@ class Spring:
         """
 
         if self.rect.height <= self.length_at_rest:
-            self.v.y += 2
+            self.v.y += 7
             self.rect.height += int(self.v.y)
             self.rect.y -= int(self.v.y)
         else:

@@ -6,19 +6,18 @@ from pinball.objects.flipper import LeftFlipper, RightFlipper
 from pinball.objects.vector import Vector
 from pinball.objects.spring import Spring
 from pinball.objects.utils import draw_lines
+from pinball.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 
 # Initialize PyGame
 pygame.init()
 
 # Initial window size
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 1000
 
 # Define spacetime
 GRAVITY_X = 0.0
 GRAVITY = 0.3
-# DT = 1  # ms (discretization of time)
-DT = 0.5  # ms (discretization of time)
+DT = 1  # ms (discretization of time)
+# DT = 0.5  # ms (discretization of time)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 bg_orig = pygame.image.load(
@@ -39,7 +38,7 @@ running = True
 # )
 
 ball = Ball(
-    pos=Vector(x=550, y=700),
+    pos=Vector(x=560, y=740),
     v=Vector(x=0, y=0),
     colour="black",
     radius=30,

@@ -1,27 +1,24 @@
 import math
 from functools import partial
 from time import time
-import numpy as np
 from pinball.objects.line import Line
 from pinball.objects.utils import calculate_distance
 from pinball.objects.vector import Vector
 import pygame
+from constants import RIGHT_ROTATION_POINT, LEFT_ROTATION_POINT, SCREEN_WIDTH
 
 
 class LeftFlipper:
     def __init__(self, screen, dt: float) -> None:
         self.screen = screen
-
-        w = screen.get_width()
-        h = screen.get_height()
-        self.rotation_point = Vector(w * 0.33, 0.9 * h)
+        self.rotation_point = LEFT_ROTATION_POINT
         self.line = Line(
             self.rotation_point,
-            self.rotation_point + Vector(1, 0.7).normalize() * w * 0.15,
+            self.rotation_point + Vector(1, 0.7).normalize() * SCREEN_WIDTH * 0.15,
             # Vector(w * 0.45, 0.95 * h),
         )
         self.state = "resting"
-        self.angular_v = 0.3
+        self.angular_v = 0.25
         self.rotation_steps = int(math.pi / (3 * self.angular_v * dt))
         self.ctr = 0
         self.dt = dt
@@ -30,7 +27,7 @@ class LeftFlipper:
 
     @property
     def boundaries(self) -> list[Line]:
-        if (time() - self.last_collision) > 0.3:
+        if (time() - self.last_collision) > 0.5:
             return [
                 Line(
                     self.line.p1,
@@ -75,17 +72,13 @@ class LeftFlipper:
 class RightFlipper:
     def __init__(self, screen: pygame.surface.Surface, dt: float) -> None:
         self.screen = screen
-
-        w = screen.get_width()
-        h = screen.get_height()
-        self.rotation_point = Vector(w * 0.67, 0.9 * h)
+        self.rotation_point = RIGHT_ROTATION_POINT
         self.line = Line(
-            # Vector(w * 0.55, 0.95 * h),
-            self.rotation_point + Vector(-1, 0.7).normalize() * w * 0.15,
+            self.rotation_point + Vector(-1, 0.7).normalize() * SCREEN_WIDTH * 0.15,
             self.rotation_point,
         )
         self.state = "resting"
-        self.angular_v = 0.5
+        self.angular_v = 0.25
         self.rotation_steps = int(math.pi / (3 * self.angular_v * dt))
         self.ctr = 0
         self.dt = dt
@@ -150,5 +143,6 @@ def calculate_flipper_v(
         direction = -Vector(
             -flipper.line.direction.y, flipper.line.direction.x
         ).normalize()
+        print(f"WWWWUUUUT: {20*factor*direction}")
 
         return 20 * factor * direction

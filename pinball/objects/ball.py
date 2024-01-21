@@ -33,7 +33,7 @@ class Ball:
     def move(self, boundaries: list[Line], gravity: float, dt: float):
         self.old_pos = self.pos
         self.old_v = self.v
-        self.v.y += gravity * dt  # TODO: put it here?
+        self.v.y += gravity * dt
 
         self.v, self.collision = self.handle_collision(boundaries, dt)
 
@@ -43,8 +43,11 @@ class Ball:
         #     pygame.display.flip()  # Update the display of the full screen
         #     pause()
 
-        self.pos.y += self.v.y * dt + gravity * dt**2
-        self.pos.x += self.v.x * dt
+        friction_parameter = dt * 0.007
+        if self.v.magnitude > 0.5:
+            self.v = self.v - (self.v * friction_parameter)
+            self.pos.y += self.v.y * dt + gravity * dt**2
+            self.pos.x += self.v.x * dt
 
     def handle_collision(self, boundaries: list[Line], dt) -> tuple[Vector, bool]:
         """
@@ -89,7 +92,6 @@ class Ball:
             if (valid_collision and ball_approaching) or tunneled:
                 # if valid_collision and ball_approaching:
                 boundary_v = nearest_boundary.v(collision_point=collision_point)
-                print(boundary_v, boundary_v.magnitude)
                 updated_v = (
                     self.v.rotate(calculate_rotation_angle(self.v, nearest_boundary))
                     + boundary_v
