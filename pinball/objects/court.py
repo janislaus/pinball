@@ -11,8 +11,6 @@ class Court:
 
     def get_boundaries(self, screen) -> list[Line]:
         s = screen
-        w = screen.get_width()
-        h = screen.get_height()
         return [
             # left
             Line(Vector(0, 0), Vector(0, s.get_height() - 235)),

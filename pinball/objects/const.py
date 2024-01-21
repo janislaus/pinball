@@ -1,7 +1,6 @@
 from pinball.objects.vector import Vector
 
-
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 1000
-Vector(w * 0.3, 0.9 * h)
-Vector(w * 0.7, 0.9 * h)
+LEFT_ROTATION_POINT = Vector(SCREEN_WIDTH * 0.325, 0.9 * SCREEN_HEIGHT)
+RIGHT_ROTATION_POINT = Vector(SCREEN_WIDTH * 0.675, 0.9 * SCREEN_HEIGHT)

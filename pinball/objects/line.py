@@ -1,8 +1,6 @@
-from __future__ import annotations
 import math
 from typing import Callable
 from pinball.objects.vector import Vector
-from pinball.objects.utils import calculate_distance, draw_lines
 from matplotlib.axes import Axes
 
 
@@ -23,7 +21,7 @@ class Line:
     def __str__(self) -> str:
         return f"Point1: {self.p1}, Point2: {self.p2}"
 
-    def __eq__(self, other: Line) -> bool:
+    def __eq__(self, other) -> bool:
         return (self.p1 == other.p1) and (self.p2 == other.p2)
 
     def contains(self, p: Vector) -> bool:
@@ -56,3 +54,23 @@ def point_on_line(line: Line, p: Vector) -> bool:
     return math.isclose(
         (p.x - line.p1.x) * line.direction.y, (p.y - line.p1.y) * line.direction.x
     )
+
+
+def lines_parallel(l1: Line, l2: Line) -> bool:
+    """
+    Lines are parallel if the cross product of their direction vectors is 0.
+    """
+    return math.isclose(l1.direction.cross_product(l2.direction), 0, abs_tol=1e-7)
+
+
+def calculate_intersection(l1: Line, l2: Line) -> Vector | None:
+    if lines_parallel(l1, l2):
+        return None
+
+    numerator = l1.direction.x * (l2.p1.y - l1.p1.y) + l1.direction.y * (
+        l1.p1.x - l2.p1.x
+    )
+    denominator = l2.direction.x * l1.direction.y - l2.direction.y * l1.direction.x
+    factor = numerator / denominator
+
+    return Vector(l2.p1.x + factor * l2.direction.x, l2.p1.y + factor * l2.direction.y)

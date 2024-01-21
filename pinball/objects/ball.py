@@ -1,17 +1,10 @@
-from __future__ import annotations
-from functools import partial
-from copy import deepcopy
 import math
 
-from pinball.objects.line import Line
+from pinball.objects.line import Line, calculate_intersection
 
 import pygame
 
 from pinball.objects.vector import Vector
-from pinball.objects.utils import (
-    calculate_intersection,
-    draw_lines,
-)
 
 
 class Ball:
@@ -37,12 +30,6 @@ class Ball:
 
         self.v, self.collision = self.handle_collision(boundaries, dt)
 
-        # if self.collision:
-        #     self.draw(self.screen)
-        #     self.drawydraw()
-        #     pygame.display.flip()  # Update the display of the full screen
-        #     pause()
-
         friction_parameter = dt * 0.007
         if self.v.magnitude > 0.5:
             self.v = self.v - (self.v * friction_parameter)
@@ -60,18 +47,12 @@ class Ball:
 
         nearest_boundary, nearest_point, distance_pos_boundary = metrics
 
-        old_v = deepcopy(self.v)
         collision_point = calculate_intersection(
             Line(self.pos, self.pos + self.v), nearest_boundary
         )
 
         if collision_point is not None:
             valid_collision = distance_pos_boundary <= self.radius
-            # and (
-            # nearest_boundary.contains(nearest_point)
-            # )
-
-            tunneled = Line(self.pos, self.pos + self.v * dt).contains(collision_point)
 
             pygame.draw.circle(
                 self.screen,
@@ -84,28 +65,13 @@ class Ball:
                 self.pos + self.v.normalize() * 0.1 - collision_point
             ).magnitude
 
-            if tunneled:
-                print("tunneled")
-                if valid_collision and ball_approaching:
-                    print("works anyways")
-
-            if (valid_collision and ball_approaching) or tunneled:
-                # if valid_collision and ball_approaching:
+            if valid_collision and ball_approaching:
                 boundary_v = nearest_boundary.v(collision_point=collision_point)
                 updated_v = (
                     self.v.rotate(calculate_rotation_angle(self.v, nearest_boundary))
                     + boundary_v
                 )
                 # ) + nearest_boundary.v(collision_point=collision_point)
-
-                self.drawydraw = partial(
-                    draw_collision,
-                    ball=self,
-                    nearest_boundary=nearest_boundary,
-                    old_v=old_v,
-                    updated_v=updated_v,
-                    nearest_point=nearest_point,
-                )
 
                 return updated_v, True
 
@@ -165,78 +131,3 @@ def calculate_rotation_angle(v: Vector, boundary: Line):
         return -2 * incoming_angle
     else:
         return 2 * incoming_angle
-
-
-def draw_collision(
-    ball: Ball,
-    nearest_boundary: Line,
-    updated_v: Vector,
-    old_v: Vector,
-    nearest_point: Vector,
-):
-    factor = 2
-    line_width = 5
-    circle_r = 5
-
-    pygame.draw.line(
-        ball.screen,
-        (255, 0, 0),
-        (ball.pos.x, ball.pos.y),
-        (ball.pos.x + factor * old_v.x, ball.pos.y + factor * old_v.y),
-        width=line_width,
-    )
-
-    pygame.draw.circle(
-        ball.screen,
-        (255, 0, 0),
-        (ball.pos.x + factor * old_v.x, ball.pos.y + factor * old_v.y),
-        circle_r,
-    )
-
-    pygame.draw.line(
-        ball.screen,
-        (0, 255, 0),
-        (ball.pos.x, ball.pos.y),
-        (ball.pos.x + factor * updated_v.x, ball.pos.y + factor * updated_v.y),
-        width=line_width,
-    )
-
-    pygame.draw.circle(
-        ball.screen,
-        (0, 255, 0),
-        (ball.pos.x + factor * updated_v.x, ball.pos.y + factor * updated_v.y),
-        circle_r,
-    )
-
-    pygame.draw.line(
-        ball.screen,
-        (255, 255, 255),
-        (nearest_boundary.p1.x, nearest_boundary.p1.y),
-        (nearest_boundary.p2.x, nearest_boundary.p2.y),
-        width=line_width,
-    )
-
-    pygame.draw.circle(
-        ball.screen,
-        (255, 255, 255),
-        (nearest_boundary.p2.x, nearest_boundary.p2.y),
-        circle_r,
-    )
-
-    pygame.draw.circle(
-        ball.screen,
-        (0, 0, 255),
-        (nearest_point.x, nearest_point.y),
-        circle_r,
-    )
-
-
-def pause():
-    paused = True
-    while paused:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                paused = False

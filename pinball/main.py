@@ -5,14 +5,10 @@ from pinball.objects.court import Court
 from pinball.objects.flipper import LeftFlipper, RightFlipper
 from pinball.objects.vector import Vector
 from pinball.objects.spring import Spring
-from pinball.objects.utils import draw_lines
 from pinball.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 
 # Initialize PyGame
 pygame.init()
-
-# Initial window size
-
 # Define spacetime
 GRAVITY_X = 0.0
 GRAVITY = 0.3
@@ -25,17 +21,6 @@ bg_orig = pygame.image.load(
 ).convert()
 clock = pygame.time.Clock()
 running = True
-
-# You could declare components (the initial ball, the other items, ...) here
-
-# ball = Ball(
-#     x=95,
-#     y=200,
-#     colour="black",
-#     r=30,
-#     vy=6,
-#     vx=-6,
-# )
 
 ball = Ball(
     pos=Vector(x=560, y=740),
@@ -108,12 +93,9 @@ while running:
 
     for obj in objects.values():
         obj.draw()
-    # objects["spring"].draw()
-    # objects["court"].draw()
 
     # Adjust screen
     SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_width(), screen.get_height()
 
     pygame.display.flip()  # Update the display of the full screen
     clock.tick(60)  # 60 frames per second
-    # clock.tick(300)  # 60 frames per second

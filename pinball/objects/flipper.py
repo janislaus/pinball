@@ -2,7 +2,6 @@ import math
 from functools import partial
 from time import time
 from pinball.objects.line import Line
-from pinball.objects.utils import calculate_distance
 from pinball.objects.vector import Vector
 import pygame
 from constants import RIGHT_ROTATION_POINT, LEFT_ROTATION_POINT, SCREEN_WIDTH
@@ -146,3 +145,7 @@ def calculate_flipper_v(
         print(f"WWWWUUUUT: {20*factor*direction}")
 
         return 20 * factor * direction
+
+
+def calculate_distance(p1: Vector, p2: Vector):
+    return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
