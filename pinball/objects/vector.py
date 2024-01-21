@@ -39,7 +39,7 @@ class Vector:
             raise ValueError("Cannot divide by zero")
         return Vector(self.x / other, self.y / other)
 
-    def __matmul__(self, other: "Vector") -> float:
+    def __matmul__(self, other: Vector) -> float:
         return self.x * other.x + self.y * other.y
 
     def rotate(self, angle: float) -> Vector:
@@ -64,9 +64,22 @@ class Vector:
         dot_product = self @ other
         return math.acos(dot_product / (self.magnitude * other.magnitude))
 
+    def angle_with_x_axis(self) -> float:
+        angle = math.atan2(self.y, self.x)
+        if angle < 0:
+            angle += 2 * math.pi  # Convert negative angle to a positive one
+        return angle
 
-def calculate_vector_angle(vector: Vector):
-    """
-    Calculate angle between x-Axis and Vector.
-    """
-    return math.atan2(vector.y, vector.x)
+
+# def calculate_vector_angle(vector: Vector):
+#     """
+#     Calculate angle between x-Axis and Vector.
+#     """
+#     return math.atan2(vector.y, vector.x)
+
+
+# if __name__ == "__main__":
+#     a = Vector(1, 1)
+#     a2 = Vector(1, -1)
+#     x = Vector(1, 0)
+#     print("asdf")

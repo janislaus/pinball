@@ -2,6 +2,7 @@ import pygame
 from pathlib import Path
 from pinball.objects.ball import Ball
 from pinball.objects.court import Court
+from pinball.objects.flipper import LeftFlipper, RightFlipper
 from pinball.objects.vector import Vector
 from pinball.objects.spring import Spring
 from pinball.objects.utils import draw_lines
@@ -16,8 +17,8 @@ SCREEN_HEIGHT = 1000
 # Define spacetime
 GRAVITY_X = 0.0
 GRAVITY = 0.3
-DT = 1  # ms (discretization of time)
-# DT = 0.1  # ms (discretization of time)
+# DT = 1  # ms (discretization of time)
+DT = 0.5  # ms (discretization of time)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 bg_orig = pygame.image.load(
@@ -38,14 +39,31 @@ running = True
 # )
 
 ball = Ball(
-    pos=Vector(x=550, y=800),
-    v=Vector(x=0, y=0),
+    pos=Vector(x=550, y=700),
+    v=Vector(x=0, y=5),
     colour="black",
     radius=30,
+    screen=screen,
 )
 
-objects = {"court": Court(screen=screen), "spring": Spring(screen=screen)}
-timer = 5
+objects = {
+    "court": Court(screen=screen),
+    "spring": Spring(screen=screen),
+    "left_flipper": LeftFlipper(screen=screen, dt=DT),
+    "right_flipper": RightFlipper(screen=screen, dt=DT),
+}
+
+
+def pause():
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                paused = False
+
 
 # Main event loop
 while running:
@@ -58,6 +76,12 @@ while running:
             objects["spring"].state = "compressing"
         elif pressed[pygame.K_ESCAPE]:
             running = False
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_j:
+                objects["right_flipper"].state = "hitting"
+            if event.key == pygame.K_f:
+                objects["left_flipper"].state = "hitting"
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE:
                 objects["spring"].state = "releasing"
@@ -77,15 +101,20 @@ while running:
         boundaries += obj.boundaries
 
     ball.move(boundaries=boundaries, gravity=GRAVITY, dt=DT)
+    objects["spring"].update()
+    objects["right_flipper"].update()
+    objects["left_flipper"].update()
+
     ball.draw(screen)
 
-    objects["spring"].update()
-    objects["spring"].draw()
-    objects["court"].draw()
+    for obj in objects.values():
+        obj.draw()
+    # objects["spring"].draw()
+    # objects["court"].draw()
 
     # Adjust screen
     SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_width(), screen.get_height()
 
     pygame.display.flip()  # Update the display of the full screen
-    # clock.tick(60)  # 60 frames per second
     clock.tick(60)  # 60 frames per second
+    # clock.tick(300)  # 60 frames per second

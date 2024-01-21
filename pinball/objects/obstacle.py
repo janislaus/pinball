@@ -106,4 +106,3 @@ class RightTriangle:
 
     def draw(self, screen):
         pygame.draw.polygon(screen, self.colour, [self.A, self.B, self.C])
-

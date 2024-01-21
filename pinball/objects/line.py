@@ -1,6 +1,6 @@
 from __future__ import annotations
 import math
-from pinball.objects.vector import Vector, calculate_vector_angle
+from pinball.objects.vector import Vector
 from pinball.objects.utils import calculate_distance, draw_lines
 from matplotlib.axes import Axes
 
@@ -9,13 +9,8 @@ class Line:
     def __init__(self, p1: Vector, p2: Vector, v=Vector(0, 0)) -> None:
         self.p1: Vector = p1
         self.p2: Vector = p2
-        self.direction: Vector = p2 - p1
-        self.length: float = calculate_distance(self.p1, self.p2)
-        if self.direction.x == 0:
-            self.angle = math.pi / 2
-        else:
-            self.angle = calculate_vector_angle(self.direction)
         self.v: Vector = v
+        self.direction: Vector = p2 - p1
 
     def __repr__(self) -> str:
         return f"Point1: {self.p1}, Point2: {self.p2}"

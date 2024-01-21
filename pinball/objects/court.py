@@ -10,7 +10,7 @@ class Court:
 
     def get_boundaries(self, screen) -> list[Line]:
         s = screen
-        shift = 30
+        shift = 10
         return [
             Line(Vector(shift, shift), Vector(shift, s.get_height() - shift)),
             Line(
@@ -19,8 +19,8 @@ class Court:
             ),
             Line(Vector(shift, shift), Vector(s.get_width() - shift, shift)),
             Line(
-                Vector(s.get_width() - shift, s.get_height() - shift),
                 Vector(shift, s.get_height() - shift),
+                Vector(s.get_width() - shift, s.get_height() - shift),
             ),
         ]
 
