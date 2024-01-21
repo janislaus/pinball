@@ -69,17 +69,3 @@ class Vector:
         if angle < 0:
             angle += 2 * math.pi  # Convert negative angle to a positive one
         return angle
-
-
-# def calculate_vector_angle(vector: Vector):
-#     """
-#     Calculate angle between x-Axis and Vector.
-#     """
-#     return math.atan2(vector.y, vector.x)
-
-
-# if __name__ == "__main__":
-#     a = Vector(1, 1)
-#     a2 = Vector(1, -1)
-#     x = Vector(1, 0)
-#     print("asdf")

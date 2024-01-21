@@ -36,6 +36,7 @@ class Ball:
         self.v.y += gravity * dt  # TODO: put it here?
 
         self.v, self.collision = self.handle_collision(boundaries, dt)
+
         # if self.collision:
         #     self.draw(self.screen)
         #     self.drawydraw()
@@ -87,10 +88,13 @@ class Ball:
 
             if (valid_collision and ball_approaching) or tunneled:
                 # if valid_collision and ball_approaching:
+                boundary_v = nearest_boundary.v(collision_point=collision_point)
+                print(boundary_v, boundary_v.magnitude)
                 updated_v = (
                     self.v.rotate(calculate_rotation_angle(self.v, nearest_boundary))
-                    + nearest_boundary.v
+                    + boundary_v
                 )
+                # ) + nearest_boundary.v(collision_point=collision_point)
 
                 self.drawydraw = partial(
                     draw_collision,
@@ -171,9 +175,6 @@ def draw_collision(
     factor = 2
     line_width = 5
     circle_r = 5
-    print(f"old: {old_v}, {math.degrees(old_v.angle_with(Vector(1,0)))}")
-    print(f"new: {updated_v}, {math.degrees(updated_v.angle_with(Vector(1,0)))}")
-    print("--------")
 
     pygame.draw.line(
         ball.screen,

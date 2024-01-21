@@ -1,15 +1,20 @@
 from __future__ import annotations
 import math
+from typing import Callable
 from pinball.objects.vector import Vector
 from pinball.objects.utils import calculate_distance, draw_lines
 from matplotlib.axes import Axes
 
 
+def calculate_default_collision_v(collision_point: Vector) -> Vector:
+    return Vector(0, 0)
+
+
 class Line:
-    def __init__(self, p1: Vector, p2: Vector, v=Vector(0, 0)) -> None:
+    def __init__(self, p1: Vector, p2: Vector, v=calculate_default_collision_v) -> None:
         self.p1: Vector = p1
         self.p2: Vector = p2
-        self.v: Vector = v
+        self.v: Callable[..., Vector] = v
         self.direction: Vector = p2 - p1
 
     def __repr__(self) -> str:

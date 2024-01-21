@@ -40,7 +40,7 @@ running = True
 
 ball = Ball(
     pos=Vector(x=550, y=700),
-    v=Vector(x=0, y=5),
+    v=Vector(x=0, y=0),
     colour="black",
     radius=30,
     screen=screen,

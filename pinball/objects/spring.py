@@ -1,7 +1,12 @@
+from functools import partial
 import pygame
 from typing import Literal
 from pinball.objects.line import Line
 from pinball.objects.vector import Vector
+
+
+def return_spring_v(collision_point, v):
+    return v
 
 
 class Spring:
@@ -18,7 +23,11 @@ class Spring:
     def boundaries(self) -> list[Line]:
         r = self.rect
         return [
-            Line(Vector(r.left, r.top), Vector(r.right, r.top), -self.v),
+            Line(
+                Vector(r.left, r.top),
+                Vector(r.right, r.top),
+                partial(return_spring_v, v=-self.v),
+            ),
             Line(Vector(r.left, r.bottom), Vector(r.right, r.bottom)),
             Line(Vector(r.right, r.top), Vector(r.right, r.bottom)),
             Line(Vector(r.left, r.top), Vector(r.left, r.bottom)),
