@@ -142,7 +142,6 @@ def calculate_flipper_v(
         direction = -Vector(
             -flipper.line.direction.y, flipper.line.direction.x
         ).normalize()
-        print(f"WWWWUUUUT: {20*factor*direction}")
 
         return 20 * factor * direction
 

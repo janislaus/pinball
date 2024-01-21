@@ -12,7 +12,7 @@ pygame.init()
 # Define spacetime
 GRAVITY_X = 0.0
 GRAVITY = 0.3
-DT = 1  # ms (discretization of time)
+DT = 0.2  # ms (discretization of time)
 # DT = 0.5  # ms (discretization of time)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
@@ -98,4 +98,4 @@ while running:
     SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_width(), screen.get_height()
 
     pygame.display.flip()  # Update the display of the full screen
-    clock.tick(60)  # 60 frames per second
+    clock.tick(300)  # 60 frames per second

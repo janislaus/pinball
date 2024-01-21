@@ -29,7 +29,7 @@ class Spring:
             Line(
                 Vector(r.left, r.top),
                 Vector(r.right, r.top),
-                partial(return_spring_v, v=-self.v),
+                partial(return_spring_v, v=-2.5 * self.v),
             ),
             Line(Vector(r.left, r.bottom), Vector(r.right, r.bottom)),
             Line(Vector(r.right, r.top), Vector(r.right, r.bottom)),
@@ -52,7 +52,7 @@ class Spring:
         """
 
         if self.rect.height <= self.length_at_rest:
-            self.v.y += 7
+            self.v.y += 1
             self.rect.height += int(self.v.y)
             self.rect.y -= int(self.v.y)
         else:
